@@ -1,45 +1,49 @@
-import gql from 'graphql-tag'
-import * as VueApolloComposable from '@vue/apollo-composable'
-import * as VueCompositionApi from 'vue'
-export type Maybe<T> = T | null
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
-export type ReactiveFunction<TParam> = () => TParam
+import gql from 'graphql-tag';
+import * as VueApolloComposable from '@vue/apollo-composable';
+import * as VueCompositionApi from 'vue';
+export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type ReactiveFunction<TParam> = () => TParam;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string
-  String: string
-  Boolean: boolean
-  Int: number
-  Float: number
-}
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+};
 
 export type QueryRoot = {
-  __typename?: 'QueryRoot'
-  todos: Array<Todo>
-}
+  __typename?: 'QueryRoot';
+  todos: Array<Todo>;
+};
 
 export type Todo = {
-  __typename?: 'Todo'
-  id: Scalars['Int']
-  text: Scalars['String']
-}
+  __typename?: 'Todo';
+  id: Scalars['Int'];
+  text: Scalars['String'];
+};
 
-export type TodosQueryVariables = Exact<{ [key: string]: never }>
+export type TodosQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type TodosQuery = { __typename?: 'QueryRoot' } & {
-  todos: Array<{ __typename?: 'Todo' } & Pick<Todo, 'id' | 'text'>>
-}
+
+export type TodosQuery = (
+  { __typename?: 'QueryRoot' }
+  & { todos: Array<(
+    { __typename?: 'Todo' }
+    & Pick<Todo, 'id' | 'text'>
+  )> }
+);
+
 
 export const TodosDocument = gql`
-  query Todos {
-    todos {
-      id
-      text
-    }
+    query Todos {
+  todos {
+    id
+    text
   }
-`
+}
+    `;
 
 /**
  * __useTodosQuery__
@@ -56,23 +60,7 @@ export const TodosDocument = gql`
  *   }
  * );
  */
-export function useTodosQuery(
-  options:
-    | VueApolloComposable.UseQueryOptions<TodosQuery, TodosQueryVariables>
-    | VueCompositionApi.Ref<
-        VueApolloComposable.UseQueryOptions<TodosQuery, TodosQueryVariables>
-      >
-    | ReactiveFunction<
-        VueApolloComposable.UseQueryOptions<TodosQuery, TodosQueryVariables>
-      > = {}
-) {
-  return VueApolloComposable.useQuery<TodosQuery, undefined>(
-    TodosDocument,
-    undefined,
-    options
-  )
-}
-export type TodosQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
-  TodosQuery,
-  TodosQueryVariables
->
+export function useTodosQuery(options: VueApolloComposable.UseQueryOptions<TodosQuery, TodosQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TodosQuery, TodosQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<TodosQuery, TodosQueryVariables>> = {}) {
+            return VueApolloComposable.useQuery<TodosQuery, undefined>(TodosDocument, undefined, options);
+          }
+export type TodosQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<TodosQuery, TodosQueryVariables>;
