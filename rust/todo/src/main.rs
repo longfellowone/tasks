@@ -153,7 +153,7 @@ async fn main() -> anyhow::Result<()> {
             .route("/", web::post().to(index))
             .route("/", web::get().to(index_playground))
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:8080")? // Use 0.0.0.0 to access from network
     .run()
     .await?;
 
