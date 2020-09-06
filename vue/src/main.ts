@@ -7,7 +7,7 @@ import { DefaultApolloClient } from '@vue/apollo-composable'
 import '@/assets/tailwind.css'
 
 const apolloClient = new ApolloClient({
-  uri: 'http://localhost:8080/',
+  uri: 'http://192.168.0.102:8080/',
 })
 
 const app = createApp(App)
