@@ -1,0 +1,22 @@
+#cargo-features = ["strip"]
+
+[package]
+name = "todo"
+version = "0.1.0"
+authors = ["Matt Wright <mattwright3195@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+actix-web = "2"
+actix-rt = "1"
+actix-cors = "0"
+async-graphql = "1"
+async-graphql-actix-web = "1"
+sqlx = { version = "0", default-features = false, features = [ "runtime-tokio", "macros", "postgres" ] }
+anyhow = "1"
+csv = "1"
+serde = { version = "1", features = ["derive"] }
+meilisearch-sdk = "0"
+
+#[profile.release]
+#strip = "symbols"
