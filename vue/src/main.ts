@@ -11,7 +11,7 @@ const app = createApp(App)
 app.use(store)
 app.use(router)
 
-const apolloClient = new ApolloClient({ uri: 'http://192.168.0.102:8080/' })
+const apolloClient = new ApolloClient({ uri: 'http://localhost:8080/' })
 app.provide(DefaultApolloClient, apolloClient)
 
 app.mount('#app')
