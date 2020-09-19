@@ -13,15 +13,30 @@ export type Scalars = {
   Float: number;
 };
 
+export type MutationRoot = {
+  __typename?: 'MutationRoot';
+  test: Scalars['String'];
+};
+
+
+export type MutationRootTestArgs = {
+  username: Scalars['String'];
+};
+
 export type QueryRoot = {
   __typename?: 'QueryRoot';
   todos: Array<Todo>;
   tasks: Array<Task>;
 };
 
+
+export type QueryRootTasksArgs = {
+  query: Scalars['String'];
+};
+
 export type Task = {
   __typename?: 'Task';
-  id: Scalars['Int'];
+  id: Scalars['ID'];
   area: Scalars['String'];
   panel: Scalars['String'];
   taskType: Scalars['String'];
@@ -41,15 +56,27 @@ export type TaskFragment = (
   & Pick<Task, 'id' | 'area' | 'panel' | 'taskType' | 'description' | 'status' | 'remainingTime'>
 );
 
-export type TasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type TaskListQueryVariables = Exact<{
+  query: Scalars['String'];
+}>;
 
 
-export type TasksQuery = (
+export type TaskListQuery = (
   { __typename?: 'QueryRoot' }
   & { tasks: Array<(
     { __typename?: 'Task' }
     & TaskFragment
   )> }
+);
+
+export type TestMutationMutationVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type TestMutationMutation = (
+  { __typename?: 'MutationRoot' }
+  & Pick<MutationRoot, 'test'>
 );
 
 export const TaskFragmentDoc = gql`
@@ -63,30 +90,58 @@ export const TaskFragmentDoc = gql`
   remainingTime
 }
     `;
-export const TasksDocument = gql`
-    query Tasks {
-  tasks {
+export const TaskListDocument = gql`
+    query TaskList($query: String!) {
+  tasks(query: $query) {
     ...Task
   }
 }
     ${TaskFragmentDoc}`;
 
 /**
- * __useTasksQuery__
+ * __useTaskListQuery__
  *
- * To run a query within a Vue component, call `useTasksQuery` and pass it any options that fit your needs.
- * When your component renders, `useTasksQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useTaskListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTaskListQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useTasksQuery(
+ * const { result, loading, error } = useTaskListQuery(
  *   {
+ *      query: // value for 'query'
  *   }
  * );
  */
-export function useTasksQuery(options: VueApolloComposable.UseQueryOptions<TasksQuery, TasksQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TasksQuery, TasksQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<TasksQuery, TasksQueryVariables>> = {}) {
-            return VueApolloComposable.useQuery<TasksQuery, undefined>(TasksDocument, undefined, options);
+export function useTaskListQuery(variables: TaskListQueryVariables | VueCompositionApi.Ref<TaskListQueryVariables> | ReactiveFunction<TaskListQueryVariables>, options: VueApolloComposable.UseQueryOptions<TaskListQuery, TaskListQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<TaskListQuery, TaskListQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<TaskListQuery, TaskListQueryVariables>> = {}) {
+            return VueApolloComposable.useQuery<TaskListQuery, TaskListQueryVariables>(TaskListDocument, variables, options);
           }
-export type TasksQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<TasksQuery, TasksQueryVariables>;
+export type TaskListQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<TaskListQuery, TaskListQueryVariables>;
+export const TestMutationDocument = gql`
+    mutation TestMutation($username: String!) {
+  test(username: $username)
+}
+    `;
+
+/**
+ * __useTestMutationMutation__
+ *
+ * To run a mutation, you first call `useTestMutationMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useTestMutationMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useTestMutationMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useTestMutationMutation(options: VueApolloComposable.UseMutationOptions<TestMutationMutation, TestMutationMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<TestMutationMutation, TestMutationMutationVariables>>) {
+            return VueApolloComposable.useMutation<TestMutationMutation, TestMutationMutationVariables>(TestMutationDocument, options);
+          }
+export type TestMutationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<TestMutationMutation, TestMutationMutationVariables>;

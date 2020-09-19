@@ -1,0 +1,5 @@
+query TaskList($query: String!) {
+  tasks(query: $query) {
+    ...Task
+  }
+}

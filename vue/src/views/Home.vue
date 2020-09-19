@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import TaskList from '@/components/Tasks/TaskList.vue'
+import TaskList from '@/components/TaskList/TaskList.vue'
 
 export default defineComponent({
   components: { TaskList },
