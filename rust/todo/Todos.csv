@@ -1,4 +1,4 @@
-﻿id,area,panel,task_type,task,status,remaining_time
+﻿id,area,panel,task_type,description,status,remaining_time
 1,C1,1L2,Rough In,New Office corridoor switch (CCO-214),Ready,8
 2,C1,1L3,Rough In,Pull BX for walkway lighting,Ready,10
 3,C1,1P5,Rough In,Fish in HC door button (CCO-226) is CD?,Ready,3

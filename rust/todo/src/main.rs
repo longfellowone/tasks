@@ -7,15 +7,15 @@
 use actix_cors::Cors;
 use actix_web::{web, App, HttpResponse, HttpServer};
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
-use async_graphql::{Context, EmptyMutation, EmptySubscription, FieldResult};
+use async_graphql::{Context, EmptySubscription, FieldResult, ID};
 use async_graphql::{Object, SimpleObject};
 use async_graphql_actix_web::{GQLRequest, GQLResponse};
 use serde::{Deserialize, Serialize};
 use sqlx::{postgres::PgQueryAs, FromRow, PgPool};
 use std::env;
 // use meilisearch_sdk::{client::*, document::*, search::*};
-// use std::thread::sleep;
-// use std::time::Duration;
+use std::thread::sleep;
+use std::time::Duration;
 
 #[SimpleObject]
 #[derive(FromRow, Debug)]
@@ -23,6 +23,26 @@ struct Todo {
     id: i32,
     text: String,
 }
+
+#[SimpleObject]
+#[derive(Serialize, Deserialize, Debug)]
+struct Task {
+    id: ID,
+    area: String,
+    panel: String,
+    task_type: String,
+    description: String,
+    status: String,
+    remaining_time: i32,
+}
+
+// impl Document for Task {
+//     type UIDType = i32;
+//
+//     fn get_uid(&self) -> &Self::UIDType {
+//         &self.id
+//     }
+// }
 
 struct QueryRoot;
 
@@ -54,24 +74,47 @@ impl QueryRoot {
 
         Ok(todos)
     }
-    // async fn tasks(&self, _ctx: &Context<'_>) -> FieldResult<Vec<Task>> {
-    //     // let db_pool = ctx.data::<PgPool>()?;
-    //
-    //     let tasks = vec![Task {
-    //         id: 0,
-    //         area: "area".to_string(),
-    //         panel: "panel".to_string(),
-    //         task_type: "task_type".to_string(),
-    //         task: "task".to_string(),
-    //         status: "status".to_string(),
-    //         remaining_time: 0,
-    //     }];
-    //
-    //     Ok(tasks)
-    // }
+    async fn tasks(&self, _ctx: &Context<'_>, query: String) -> FieldResult<Vec<Task>> {
+        // let db_pool = ctx.data::<PgPool>()?;
+
+        println!("{}", query);
+
+        let tasks = vec![
+            Task {
+                id: 1.into(),
+                area: "area1".to_string(),
+                panel: "panel1".to_string(),
+                task_type: "task_type1".to_string(),
+                description: "task1".to_string(),
+                status: "status1".to_string(),
+                remaining_time: 1,
+            },
+            Task {
+                id: 2.into(),
+                area: "area2".to_string(),
+                panel: "panel2".to_string(),
+                task_type: "task_type2".to_string(),
+                description: "task2".to_string(),
+                status: "status2".to_string(),
+                remaining_time: 2,
+            },
+        ];
+
+        Ok(tasks)
+    }
 }
 
-type Schema = async_graphql::Schema<QueryRoot, EmptyMutation, EmptySubscription>;
+struct MutationRoot;
+
+#[Object]
+impl MutationRoot {
+    async fn test(&self, username: String) -> FieldResult<String> {
+        sleep(Duration::from_secs(1));
+        Ok(username)
+    }
+}
+
+type Schema = async_graphql::Schema<QueryRoot, MutationRoot, EmptySubscription>;
 
 async fn index(schema: web::Data<Schema>, req: GQLRequest) -> GQLResponse {
     req.into_inner().execute(&schema).await.into()
@@ -84,26 +127,6 @@ async fn index_playground() -> actix_web::Result<HttpResponse> {
             GraphQLPlaygroundConfig::new("/").subscription_endpoint("/"),
         )))
 }
-
-#[SimpleObject]
-#[derive(Serialize, Deserialize, Debug)]
-struct Task {
-    id: i32,
-    area: String,
-    panel: String,
-    task_type: String,
-    task: String,
-    status: String,
-    remaining_time: i32,
-}
-
-// impl Document for Task {
-//     type UIDType = i32;
-//
-//     fn get_uid(&self) -> &Self::UIDType {
-//         &self.id
-//     }
-// }
 
 #[actix_rt::main]
 async fn main() -> anyhow::Result<()> {
@@ -132,7 +155,7 @@ async fn main() -> anyhow::Result<()> {
     //
     // sleep(Duration::from_secs(1));
     //
-    // let query = Query::new("").with_filters("area = n1");
+    // let query = Query::new("conduit").with_filters("area = n1");
     // let results = tasks_index.search::<Task>(&query).await.unwrap().hits;
     //
     // results.iter().for_each(|task| println!("{:?}", task));
@@ -142,7 +165,7 @@ async fn main() -> anyhow::Result<()> {
 
     let db_pool = PgPool::new(conn.as_str()).await?;
 
-    let schema = async_graphql::Schema::build(QueryRoot, EmptyMutation, EmptySubscription)
+    let schema = async_graphql::Schema::build(QueryRoot, MutationRoot, EmptySubscription)
         .data(db_pool)
         .finish();
 
