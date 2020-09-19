@@ -1,6 +1,11 @@
 overwrite: true
+# watch: true
 schema: 'http://localhost:8080/'
+# https://graphql-code-generator.com/docs/getting-started/documents-field#root-level
 documents: 'src/**/*.graphql'
+# documents:
+#   - 'src/**/*.vue'
+#   - noRequire: true
 generates:
   src/generated/graphql.ts:
     plugins:

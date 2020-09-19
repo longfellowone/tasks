@@ -1,13 +1,13 @@
 <template>
-  <todo-list />
+  <task-list />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import TodoList from '@/components/TodoList.vue'
+import TaskList from '@/components/Tasks/TaskList.vue'
 
 export default defineComponent({
-  components: { TodoList },
+  components: { TaskList },
   setup() {
     //
   },

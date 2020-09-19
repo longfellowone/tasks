@@ -1,0 +1,9 @@
+fragment Task on Task {
+  id
+  area
+  panel
+  taskType
+  description
+  status
+  remainingTime
+}
