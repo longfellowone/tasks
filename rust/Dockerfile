@@ -2,13 +2,13 @@
 FROM rust:1.45.2 AS builder
 WORKDIR /builder
 
-COPY todo/Cargo.toml Cargo.lock ./
+COPY tasks Cargo.lock ./
 RUN set -x\
  && mkdir -p src\
  && echo "fn main() {println!(\"broken\")}" > src/main.rs\
  && cargo build --release
 
-COPY todo/src ./src
+COPY tasks ./src
 RUN set -x\
  && find target/release/ -type f -executable -maxdepth 1 -delete\
  && cargo build --release

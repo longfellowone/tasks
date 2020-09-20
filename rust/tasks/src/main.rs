@@ -7,25 +7,22 @@
 use actix_cors::Cors;
 use actix_web::{web, App, HttpResponse, HttpServer};
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
-use async_graphql::{Context, EmptySubscription, FieldResult, ID};
-use async_graphql::{Object, SimpleObject};
+use async_graphql::{Context, EmptySubscription, FieldResult, Object, SimpleObject, ID};
 use async_graphql_actix_web::{GQLRequest, GQLResponse};
 use serde::{Deserialize, Serialize};
-use sqlx::{postgres::PgQueryAs, FromRow, PgPool};
+use sqlx::{FromRow, PgPool};
 use std::env;
 // use meilisearch_sdk::{client::*, document::*, search::*};
 use std::thread::sleep;
 use std::time::Duration;
 
-#[SimpleObject]
-#[derive(FromRow, Debug)]
+#[derive(SimpleObject, FromRow, Debug)]
 struct Todo {
     id: i32,
     text: String,
 }
 
-#[SimpleObject]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(SimpleObject, Serialize, Deserialize, Debug)]
 struct Task {
     id: ID,
     area: String,
@@ -74,6 +71,7 @@ impl QueryRoot {
 
         Ok(todos)
     }
+
     async fn tasks(&self, _ctx: &Context<'_>, query: String) -> FieldResult<Vec<Task>> {
         // let db_pool = ctx.data::<PgPool>()?;
 
@@ -81,7 +79,7 @@ impl QueryRoot {
 
         let tasks = vec![
             Task {
-                id: 1.into(),
+                id: "1".into(),
                 area: "area1".to_string(),
                 panel: "panel1".to_string(),
                 task_type: "task_type1".to_string(),
@@ -109,7 +107,7 @@ struct MutationRoot;
 #[Object]
 impl MutationRoot {
     async fn test(&self, username: String) -> FieldResult<String> {
-        sleep(Duration::from_secs(1));
+        sleep(Duration::from_secs(2));
         Ok(username)
     }
 }
@@ -117,7 +115,7 @@ impl MutationRoot {
 type Schema = async_graphql::Schema<QueryRoot, MutationRoot, EmptySubscription>;
 
 async fn index(schema: web::Data<Schema>, req: GQLRequest) -> GQLResponse {
-    req.into_inner().execute(&schema).await.into()
+    schema.execute(req.into_inner()).await.into()
 }
 
 async fn index_playground() -> actix_web::Result<HttpResponse> {
@@ -128,7 +126,7 @@ async fn index_playground() -> actix_web::Result<HttpResponse> {
         )))
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> anyhow::Result<()> {
     // docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
     // https://www.elastic.co/blog/found-keeping-elasticsearch-in-sync
@@ -142,7 +140,7 @@ async fn main() -> anyhow::Result<()> {
     //
     // let mut tasks = vec![];
     //
-    // let mut rdr = csv::Reader::from_path("C:/Users/mattw/dev/todo-rust/todo/Todos.csv").unwrap();
+    // let mut rdr = csv::Reader::from_path("C:/Users/mattw/dev/tasks-rust/tasks/Todos.csv").unwrap();
     // for row in rdr.deserialize() {
     //     let task: Task = row?;
     //     tasks.push(task);
@@ -161,9 +159,9 @@ async fn main() -> anyhow::Result<()> {
     // results.iter().for_each(|task| println!("{:?}", task));
 
     let db_pass = env::var("DB_PASS").unwrap();
-    let conn = format!("postgres://postgres:{}@localhost/rust", db_pass);
+    let db_url = format!("postgres://postgres:{}@localhost/rust", db_pass);
 
-    let db_pool = PgPool::new(conn.as_str()).await?;
+    let db_pool = PgPool::connect(&db_url).await?;
 
     let schema = async_graphql::Schema::build(QueryRoot, MutationRoot, EmptySubscription)
         .data(db_pool)
@@ -180,7 +178,7 @@ async fn main() -> anyhow::Result<()> {
     .run()
     .await?;
 
-    println!("Server started");
+    println!("Server started!");
 
     Ok(())
 }

@@ -37,9 +37,9 @@ substitutions:
   _PLATFORM: managed
   _LABELS: gcb-trigger-id=582eeee6-082f-4c88-b8ee-13b7a9b4b479
   _TRIGGER_ID: 582eeee6-082f-4c88-b8ee-13b7a9b4b479
-  _SERVICE_NAME: todo-rust
+  _SERVICE_NAME: tasks-rust
   _DEPLOY_REGION: us-west1
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
-  - todo-rust
+  - tasks-rust
