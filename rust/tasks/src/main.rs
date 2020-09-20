@@ -4,6 +4,7 @@
 // http://xion.io/post/code/rust-iter-patterns.html
 // http://xion.io/post/code/rust-string-args.html
 // https://www.reddit.com/r/rust/comments/hzx1ak/beginners_critiques_of_rust/fzm45ms?utm_source=share&utm_medium=web2x
+// https://github.com/perdumonocle/sql-builder
 use actix_cors::Cors;
 use actix_web::{web, App, HttpResponse, HttpServer};
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};

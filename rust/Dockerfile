@@ -1,3 +1,5 @@
+# https://github.com/rust-lang/cargo/issues/2644#issuecomment-660678808
+# https://stackoverflow.com/a/59633394/10769162
 # https://github.com/rust-lang/cargo/issues/2644
 FROM rust:1.45.2 AS builder
 WORKDIR /builder
