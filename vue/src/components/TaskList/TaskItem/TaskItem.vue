@@ -1,5 +1,7 @@
 <template>
-  <li class="text-6xl text-center">{{ task.description }}</li>
+  <li class="text-6xl text-center">
+    ID:{{ task.id }} - {{ task.description }}
+  </li>
 </template>
 
 <script lang="ts">
